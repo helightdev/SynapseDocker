@@ -1,7 +1,8 @@
 FROM steamcmd/steamcmd AS steambuild
 LABEL maintainer="helightdev@gmail.com"
 
-ARG SYNAPSE_VERSION="v.2.3.0"
+ARG SYNAPSE_VERSION="v.2.3.2"
+ARG MULTIADMIN_VERSION="3.3.0"
 ARG APPID=996560
 USER root
 RUN mkdir -p /scpsl
@@ -9,6 +10,7 @@ RUN apt-get update && apt-get install wget unzip -y
 RUN steamcmd +login anonymous +force_install_dir /scpsl \
     +app_update $APPID validate +quit
 RUN wget https://github.com/SynapseSL/Synapse/releases/download/$SYNAPSE_VERSION/Synapse2.zip && unzip -d /buf/ Synapse2.zip
+RUN wget https://github.com/ServerMod/MultiAdmin/releases/download/$MULTIADMIN_VERSION/MultiAdmin.exe && mv ./MultiAdmin.exe /scpsl
 
 FROM mono AS runner
 RUN apt-get update && apt-get upgrade -y
@@ -24,4 +26,4 @@ RUN cp -R /buf/Synapse/. /Synapse
 
 WORKDIR /scpsl
 EXPOSE 7777/udp
-ENTRYPOINT cp -nR /buf/Synapse/. /Synapse && ./LocalAdmin 7777
+ENTRYPOINT cp -nR /buf/Synapse/. /Synapse && mono MultiAdmin.exe -p 7777
