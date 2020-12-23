@@ -14,13 +14,16 @@ RUN wget https://github.com/ServerMod/MultiAdmin/releases/download/$MULTIADMIN_V
 
 FROM mono AS runner
 RUN apt-get update && apt-get upgrade -y
-COPY --chown=root:root --from=steambuild /scpsl /scpsl
-COPY --chown=root:root --from=steambuild /buf /buf
+RUN groupadd -r scpsl && useradd -rmg scpsl scpsl
+COPY --chown=scpsl:scpsl --from=steambuild /scpsl /scpsl
+COPY --chown=scpsl:scpsl --from=steambuild /buf /buf
+RUN mkdir /Synapse /vancfg && chown -hR scpsl:scpsl /Synapse /vancfg
 VOLUME /Synapse
 VOLUME /vancfg
-RUN mkdir -p /root/.config/"SCP Secret Laboratory"/config ~/.config/
-RUN ln -s /Synapse /root/.config/Synapse
-RUN ln -s /vancfg /root/.config/"SCP Secret Laboratory"/config/7777
+USER scpsl
+RUN mkdir -p /home/scpsl/.config/"SCP Secret Laboratory"/config ~/.config/
+RUN ln -s /Synapse /home/scpsl/.config/Synapse
+RUN ln -s /vancfg /home/scpsl/.config/"SCP Secret Laboratory"/config/7777
 RUN mv buf/Assembly-CSharp.dll /scpsl/SCPSL_Data/Managed/Assembly-CSharp.dll
 RUN cp -R /buf/Synapse/. /Synapse
 
