@@ -13,7 +13,7 @@ RUN wget https://github.com/SynapseSL/Synapse/releases/download/$SYNAPSE_VERSION
 RUN wget https://github.com/ServerMod/MultiAdmin/releases/download/$MULTIADMIN_VERSION/MultiAdmin.exe && mv ./MultiAdmin.exe /scpsl
 
 FROM mono AS runner
-RUN apt-get update && apt-get upgrade -y
+RUN apt-get update && apt-get upgrade -y && apt-get install sudo -y
 RUN groupadd -r scpsl && useradd -rmg scpsl scpsl
 COPY --chown=scpsl:scpsl --from=steambuild /scpsl /scpsl
 COPY --chown=scpsl:scpsl --from=steambuild /buf /buf
@@ -26,7 +26,10 @@ RUN ln -s /Synapse /home/scpsl/.config/Synapse
 RUN ln -s /vancfg /home/scpsl/.config/"SCP Secret Laboratory"/config/7777
 RUN mv buf/Assembly-CSharp.dll /scpsl/SCPSL_Data/Managed/Assembly-CSharp.dll
 RUN cp -R /buf/Synapse/. /Synapse
+USER root
 
 WORKDIR /scpsl
 EXPOSE 7777/udp
-ENTRYPOINT cp -nR /buf/Synapse/. /Synapse && mono MultiAdmin.exe -p 7777
+ENTRYPOINT cp -nR /buf/Synapse/. /Synapse \
+    && chown -hR scpsl:scpsl /Synapse /vancfg \
+    && sudo -u scpsl mono MultiAdmin.exe -p 7777
