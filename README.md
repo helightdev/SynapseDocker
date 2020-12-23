@@ -28,4 +28,7 @@ docker run -itd -p 7777:7777/udp -v /home/scpsl/synapse:/Synapse -v /home/scpsl/
 ## Using Plugins & Synapse Configs
 You have to mount a directory to /Synapse like in the second and third run-example. 
 After that, you can place your plugins in either "plugins/server-shared" or "plugins/server-7777".
-You can access the configuration in the same manner using "configs/server-shared" or "configs/server-7777" 
+You can access the configuration in the same manner using "configs/server-shared" or "configs/server-7777"
+
+## Credits
+[ServerMod/Multiadmin](https://github.com/ServerMod/MultiAdmin "MultiAdmin Repo")
