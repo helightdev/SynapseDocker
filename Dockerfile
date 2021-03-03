@@ -1,7 +1,7 @@
 FROM steamcmd/steamcmd AS steambuild
 LABEL maintainer="helightdev@gmail.com"
 
-ARG SYNAPSE_VERSION="v.2.3.2"
+ARG SYNAPSE_VERSION="v.2.5.2"
 ARG MULTIADMIN_VERSION="3.3.0"
 ARG APPID=996560
 USER root
